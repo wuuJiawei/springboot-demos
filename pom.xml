@@ -6,8 +6,16 @@
 
     <groupId>xyz.easyboot</groupId>
     <artifactId>springboot-demos</artifactId>
+    <packaging>pom</packaging>
     <version>1.0</version>
-
+    <modules>
+        <module>bean-copy-test</module>
+        <module>dubbo-consumer</module>
+        <module>dubbo-provider</module>
+        <module>shiro-multi-realm</module>
+        <module>websocket</module>
+        <module>docker-compose</module>
+    </modules>
 
 
 </project>
