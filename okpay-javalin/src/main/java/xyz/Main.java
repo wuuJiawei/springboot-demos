@@ -5,6 +5,7 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import cn.hutool.log.StaticLog;
 import com.murong.ecp.app.merchant.atc.MerchantUtil;
 import com.murong.ecp.app.merchant.atc.RSASignUtil;
 import io.javalin.Javalin;
@@ -33,14 +34,14 @@ public class Main {
             Map<String, String> dataMap = new HashMap<>();
             JSONObject jsonObject = JSONUtil.parseObj(json);
             jsonObject.forEach((k, v) -> {
-                System.out.println(k + " ==> " + v);
+                StaticLog.info(k + " ==> " + v);
                 dataMap.put(k, v == null ? "" : v.toString());
             });
             
             String certPass = ctx.queryParam("certPass");
             String certPath = ctx.queryParam("certPath");
             SignResult sign = getSign(dataMap, certPass, certPath);
-            System.out.println("sign: " + JSONUtil.toJsonStr(sign));
+            StaticLog.info("sign: " + JSONUtil.toJsonStr(sign));
             ctx.json(sign);
         }).get("/request", ctx -> {
             // 中环百联OK付请求
@@ -54,7 +55,7 @@ public class Main {
                 dataMap.put(k, v == null ? "" : v.toString());
             });
             SignResult sign = getSign(dataMap, certPass, certPath);
-            System.out.println("sign: " + JSONUtil.toJsonStr(sign));
+            StaticLog.info("sign: " + JSONUtil.toJsonStr(sign));
             Map<String, String> result = request(requestUrl, dataMap, sign.getMerchantSign(), sign.getMerchantCert());
             ctx.json(result);
         }).get("/telefen-sign", ctx -> {
@@ -91,12 +92,12 @@ public class Main {
         String merchantCertPass = certPass;
         RSASignUtil util = new RSASignUtil(merchantCertPath, merchantCertPass);
         String sf = util.coverMap2String(requestMap);
-        System.out.println("签名前的数据：" + sf);
+        StaticLog.info("签名前的数据：" + sf);
         String merchantSign = util.sign(sf, "GBK");
         String merchantCert = util.getCertInfo();
     
-        System.out.println(merchantSign);
-        System.out.println(merchantCert);
+        StaticLog.info(merchantSign);
+        StaticLog.info(merchantCert);
     
         SignResult result = new SignResult();
         result.setMerchantSign(merchantSign);
@@ -107,15 +108,15 @@ public class Main {
     public static Map<String, String> request(String requestUrl, Map<String, String> dataMap, String merchantSign, String merchantCert) {
         String reqData = MapUtil.join(dataMap, "&", "=");
         String buf = reqData + "&merchantSign=" + merchantSign + "&merchantCert=" + merchantCert;
-        System.out.println("请求报文: ");
-        System.out.println(buf);
+        StaticLog.info("请求报文: " + buf);
         Map<String, String> map = null;
         try {
             String res = MerchantUtil.sendAndRecv(requestUrl, buf, "00");
-            System.out.println("请求成功，返回报文：" + res);
+            StaticLog.info("请求成功，返回报文：" + res);
             map = HttpUtil.decodeParamMap(res, CharsetUtil.CHARSET_UTF_8);
         } catch (Throwable e) {
-            System.out.println("请求失败，返回报文：" + e.getMessage());
+            StaticLog.error("请求失败，返回报文：" + e.getMessage());
+            StaticLog.error(e);
             map = new HashMap<>(2);
             map.put("status", "FAILED");
             map.put("returnMessage", e.getMessage());
