@@ -2,6 +2,7 @@ package xyz;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.cron.CronUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -92,13 +93,8 @@ public class Main {
         String merchantCertPass = certPass;
         RSASignUtil util = new RSASignUtil(merchantCertPath, merchantCertPass);
         String sf = util.coverMap2String(requestMap);
-        StaticLog.info("签名前的数据：" + sf);
         String merchantSign = util.sign(sf, "GBK");
         String merchantCert = util.getCertInfo();
-    
-        StaticLog.info(merchantSign);
-        StaticLog.info(merchantCert);
-    
         SignResult result = new SignResult();
         result.setMerchantSign(merchantSign);
         result.setMerchantCert(merchantCert);

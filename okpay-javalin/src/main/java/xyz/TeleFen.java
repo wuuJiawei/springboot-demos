@@ -55,25 +55,45 @@ public class TeleFen {
         }
         request.header("Content-Type", "application/json;charset=UTF-8");
         request.body(bodyStr);
+        
+        StaticLog.info(request.toString());
     
         // 解析响应
-        HttpResponse response = request.execute();
-        response.close();
-        if (!response.isOk()) {
-            return fail();
+        HttpResponse response = null;
+        try {
+            response = request.execute();
+        } catch (Exception e) {
+            String msg = e.getMessage();
+            StaticLog.error(msg, e);
+        } finally {
+            if (response != null) {
+                response.close();
+            }
         }
+
+        if (response == null) {
+            return fail("None response");
+        }
+        
+        StaticLog.info(response.toString());
+        
+        if (!response.isOk()) {
+            return fail(response.toString());
+        }
+        
         String result = response.body();
         StaticLog.info(result);
         if (StrUtil.isEmpty(result)) {
-            return fail();
+            return fail(null);
         }
         return result;
     }
     
-    private static String fail() {
+    private static String fail(String message) {
+        message = StrUtil.isEmpty(message) ? "Network error" : message;
         JSONObject jsonObject = new JSONObject();
         jsonObject.set("code", "FAIL");
-        jsonObject.set("errormsg", "Network error");
+        jsonObject.set("errormsg", message);
         return jsonObject.toString();
     }
     
