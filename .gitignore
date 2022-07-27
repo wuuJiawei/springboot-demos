@@ -1,1 +1,9 @@
-/.idea
+.idea
+rebel.xml
+*.iml
+*.ipr
+*.iws
+*.lst
+
+logs
+target

@@ -17,6 +17,9 @@
         <module>docker-compose</module>
         <module>classloader</module>
         <module>mongodb</module>
+        <module>ok-pay-demo</module>
+        <module>okpay-javalin</module>
+        <module>json-serialization</module>
     </modules>
 
 
