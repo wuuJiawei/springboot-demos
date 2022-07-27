@@ -73,6 +73,11 @@ public class Main {
             String token = ctx.queryParam("token");
             String result = TeleFen.request(url, token, JSONUtil.parseObj(header), JSONUtil.parseObj(body));
             ctx.json(result);
+        }).get("/telefen-mail", context -> {
+            String str = context.queryParam("param");
+            MailSender.Param param = JSONUtil.toBean(str, MailSender.Param.class);
+            new MailSender().send(param);
+            context.json("success");
         });
     }
     
