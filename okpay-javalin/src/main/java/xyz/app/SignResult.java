@@ -1,4 +1,4 @@
-package xyz;
+package xyz.app;
 
 /**
  * @author wujiawei
