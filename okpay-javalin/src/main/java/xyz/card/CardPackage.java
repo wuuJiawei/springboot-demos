@@ -2,6 +2,9 @@ package xyz.card;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HtmlUtil;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
+import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.log.StaticLog;
@@ -30,6 +33,28 @@ public class CardPackage {
             result.setMerchantSign(sign);
             StaticLog.info("sign: " + JSONUtil.toJsonStr(sign));
             ctx.json(result);
+        }
+    }
+    
+    public static class SignAndRequest implements Handler {
+    
+        @Override
+        public void handle(@NotNull Context ctx) throws Exception {
+            String url = ctx.queryParam("url");
+            String json = ctx.queryParam("json");
+            String key = ctx.queryParam("key");
+    
+            key = StrUtil.replace(key, "\\", "");
+            JSONObject jsonObject = JSONUtil.parseObj(json);
+            String sign = sign(jsonObject, key);
+            jsonObject.set("sign", sign);
+    
+            HttpRequest request = HttpUtil.createPost(url).body(jsonObject.toString());
+            StaticLog.info(request.toString());
+            HttpResponse response = request.execute();
+            response.close();
+            StaticLog.info(response.toString());
+            ctx.json(response.body());
         }
     }
     

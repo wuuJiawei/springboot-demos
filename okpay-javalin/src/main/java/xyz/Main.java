@@ -20,6 +20,7 @@ public class Main {
         app.get("/sign", new MobileApp.Sign());
         app.get("/request", new MobileApp.Request());
         app.get("/card-package/sign", new CardPackage.Sign());
+        app.get("/card-package/sign-and-request", new CardPackage.SignAndRequest());
         app.get("/telefen-sign", ctx -> {
             // 电信翼积分签名
             String body = ctx.queryParam("body");
