@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>WebsSockets</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="app" class="w-screen mt-4">
+    <div class="p-8">
+        <div class="items-center gap-2 mt-2 mb-2 text-sm font-medium text-slate-500">
+            GoodsId:
+            <input placeholder="Type your goods id"
+                   v-model="goodsId"
+                   class="px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500 disabled:shadow-none">
+        </div>
+        <div class=" pt-1 flex gap-2">
+            <div @click="start" class="cursor-pointer w-full inline-flex items-center justify-center p-2 bg-indigo-500 rounded-md shadow-lg text-white">
+                开启单个商品
+            </div>
+            <div @click="startConcurrency" class="cursor-pointer w-full inline-flex items-center justify-center p-2 bg-indigo-500 rounded-md shadow-lg text-white">
+                开启多个商品
+            </div>
+            <div @click="getGoods" class="cursor-pointer w-full inline-flex items-center justify-center p-2 bg-indigo-500 rounded-md shadow-lg text-white">
+                查询商品
+            </div>
+        </div>
+        <p class="py-1 mb-2 text-sm font-medium text-slate-500 ">
+            {{ goods }}
+            <br>
+            当前时间: {{ now }}
+            <br>
+            倒计时: <span class="text-2xl" :class="countDown <= 30 ? 'text-red-500' : ''">{{ countDown }}</span>
+        </p>
+        <div class=" pt-1 flex gap-2">
+            <div @click="bidSync" class="cursor-pointer w-full inline-flex items-center justify-center p-2 bg-indigo-500 rounded-md shadow-lg text-white">
+                出价-同步
+            </div>
+            <div @click="bidAsync" class="cursor-pointer w-full inline-flex items-center justify-center p-2 bg-indigo-500 rounded-md shadow-lg text-white">
+                出价-异步并发
+            </div>
+        </div>
+        <p class="py-1 mb-2 text-sm font-medium text-slate-500">
+            {{ result }}
+        </p>
+    </div>
+
+</div>
+
+<script>
+
+    const { createApp, ref, onMounted, watch } = Vue
+    createApp({
+        setup() {
+            const goodsId = ref(1);
+            const goods = ref({})
+            const now = ref('')
+            const countDown = ref(0)
+            const result = ref('')
+
+            const start = ()=>{
+                axios.get(`/start/${goodsId.value}`)
+                    .then(function (response) {
+                        console.log(response);
+                        goods.value = response.data
+                        setInterval(() => {
+                            fetchGoods()
+                        }, 300)
+                        startCountDown()
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+
+            let timer;
+            const startCountDown = () => {
+                const endTime = goods.value.endTime; // yyyy-MM-dd HH:mm:ss
+                const nowTime = new Date();
+                const diff = new Date(endTime) - nowTime;
+                countDown.value = Math.floor(diff / 1000);
+                if (timer || countDown.value <= 0) {
+                    clearInterval(timer)
+                }
+                timer = setInterval(() => {
+                    countDown.value--
+                    if (countDown.value <= 0) {
+                        clearInterval(timer)
+                        countDown.value = 0
+                        result.value = '已结算'
+                    }
+                }, 1000)
+            }
+
+            const getGoods = ()=>{
+                fetchGoods()
+            }
+
+            const startConcurrency = ()=>{
+                axios.get(`/start-concurrency`)
+                    .then(function (response) {
+                        console.log(response);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+
+            watch(() => goods.value, () => {
+                if (timer) {
+                    clearInterval(timer)
+                }
+                startCountDown()
+            }, { deep: true })
+
+            const fetchGoods = ()=>{
+                axios.get(`/get/${goodsId.value}`)
+                    .then(function (response) {
+                        console.log(response);
+                        goods.value = response.data
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+
+            const bidAsync = ()=>{
+                axios.get(`/bid-async/${goodsId.value}`)
+                    .then(function (response) {
+                        console.log('bidAsync', response);
+                        getGoods()
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+
+            const bidSync = ()=>{
+                axios.get(`/bid-sync/${goodsId.value}`)
+                    .then(function (response) {
+                        console.log('bidSync', response);
+                        getGoods()
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+
+            setInterval(() => {
+                now.value = new Date().toLocaleString()
+            }, 1000)
+
+            return {
+                goodsId,
+                goods,
+                now,
+                countDown,
+                result,
+                start,
+                bidAsync,
+                bidSync,
+                startConcurrency,
+                getGoods
+            }
+        }
+    }).mount('#app')
+</script>
+</body>
+</html>

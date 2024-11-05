@@ -1,0 +1,93 @@
+[
+    {
+        "comment": "商品状态: 10-待上架, 20-上架中, 30-竞拍中, 40-已流拍, 50-已成交",
+        "className": "LiveGoodsGoodsStatusEnum",
+        "items": [
+            {
+                "name": "PENDING_SHELVING",
+                "comment": "待上架",
+                "code": "10"
+            },
+            {
+                "name": "SHELVING",
+                "comment": "上架中",
+                "code": "20"
+            },
+            {
+                "name": "AUCTIONING",
+                "comment": "竞拍中",
+                "code": "30"
+            },
+            {
+                "name": "SOLD_OUT",
+                "comment": "已流拍",
+                "code": "40"
+            },
+            {
+                "name": "SALE_SUCCESS",
+                "comment": "已成交",
+                "code": "50"
+            }
+        ],
+        "isEnum": true,
+        "fieldName": "goods_status",
+        "tableName": "live_goods"
+    },
+    {
+        "comment": "结算状态: 00-待结算, 10-结算中, 20-已结算",
+        "className": "LiveGoodsSettleStatusEnum",
+        "items": [
+            {
+                "name": "PENDING_SETTLEMENT",
+                "comment": "待结算",
+                "code": "00"
+            },
+            {
+                "name": "SETTLING",
+                "comment": "结算中",
+                "code": "10"
+            },
+            {
+                "name": "SETTLED",
+                "comment": "已结算",
+                "code": "20"
+            }
+        ],
+        "isEnum": true,
+        "fieldName": "settle_status",
+        "tableName": "live_goods"
+    },
+    {
+        "comment": "成交类型：0-竞拍成交，10-还价成交，20-传送成交",
+        "className": "LiveGoodsBelongTypeEnum",
+        "items": [
+            {
+                "name": "AUCTION_BUYOUT",
+                "comment": "竞拍成交",
+                "code": "0"
+            },
+            {
+                "name": "BARGAIN_BUYOUT",
+                "comment": "还价成交",
+                "code": "10"
+            },
+            {
+                "name": "TRANSPORT_BUYOUT",
+                "comment": "传送成交",
+                "code": "20"
+            }
+        ],
+        "isEnum": true,
+        "fieldName": "belong_type",
+        "tableName": "live_goods"
+    },
+    {
+        "comment": "商品排序号: 初始化时值为拍号",
+        "className": "LiveGoodsSortEnum",
+        "items": [
+        ],
+        "isEnum": false,
+        "fieldName": "sort",
+        "tableName": "live_goods"
+    }
+]

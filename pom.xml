@@ -9,8 +9,9 @@
     <packaging>pom</packaging>
     <version>1.0</version>
     <modules>
+        <module>api-encrypt-decrypt</module>
         <module>bean-copy-test</module>
-        <module>dubbo-consumer</module>
+<!--        <module>dubbo-messageConsumer</module>-->
         <module>dubbo-provider</module>
         <module>shiro-multi-realm</module>
         <module>websocket</module>
@@ -20,6 +21,17 @@
         <module>ok-pay-demo</module>
         <module>okpay-javalin</module>
         <module>json-serialization</module>
+        <module>yst-demos</module>
+        <module>nacos-config</module>
+        <module>docker</module>
+        <module>kafka-kerberos</module>
+        <module>alibaba-dashscope</module>
+        <module>kafka-kerberos-origin-demo</module>
+        <module>elasticsearch-demo</module>
+        <module>95fen</module>
+        <module>auction</module>
+        <module>keystore-decrypt</module>
+        <module>mybatis-plus</module>
     </modules>
 
 

@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>xyz.easyboot</groupId>
-    <artifactId>dubbo-consumer</artifactId>
+    <artifactId>dubbo-messageConsumer</artifactId>
     <version>1.0</version>
-    <name>dubbo-consumer</name>
+    <name>dubbo-messageConsumer</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>

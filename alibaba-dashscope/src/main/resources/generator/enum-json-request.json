@@ -1,0 +1,15 @@
+[
+    {
+    "tableName": "live_goods",
+    "fields": [
+        {
+            "fieldName": "goods_status",
+            "comment": "商品状态: 10-待上架, 20-上架中, 30-竞拍中, 40-已流拍, 50-已成交",
+        },
+        {
+                    "fieldName": "stream_status",
+                    "comment": "直播间状态: 00-关闭, 10-开启",
+                },
+    ]
+    }
+]
